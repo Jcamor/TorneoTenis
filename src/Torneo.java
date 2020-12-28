@@ -1,13 +1,23 @@
 
 public class Torneo {
 	// int MAX = 30;
-	public static int[][] encuentros = new int[30][30]; // vector de encuentros entre los [jugadores][días]
-	public static int n = 21;
+	public static int[][] encuentros = new int[50][50]; // vector de encuentros entre los [jugadores][días]
+	public static int n=2; // caso base
+	public static boolean traza;
+	public static boolean ayuda;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// n es la cantidad de jugadores
-
+//		if (args[0] == "-t") {
+//			traza = true;
+//		}else if (args[0] == "-h") {
+//			ayuda = true;
+//		}
+//		else {
+			n= Integer.parseInt(args[0]);
+//		}
+		
 		System.out.println("Número de jugadores: " + n);
 		System.out.println();
 		System.out.println();
