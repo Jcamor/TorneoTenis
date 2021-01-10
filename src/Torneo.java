@@ -1,32 +1,100 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Torneo {
 	// int MAX = 30;
 	public static int[][] encuentros = new int[50][50]; // vector de encuentros entre los [jugadores][días]
-	public static int n=2; // caso base
-	public static boolean traza;
-	public static boolean ayuda;
+	public static int n = 2; // caso base
+	public static boolean traza = false;
+	public static boolean correcto = false;
+	public static String nombreArchivo;
+	public static String nombreJugadores[];
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		// n es la cantidad de jugadores
-//		if (args[0] == "-t") {
-//			traza = true;
-//		}else if (args[0] == "-h") {
-//			ayuda = true;
-//		}
-//		else {
-			n= Integer.parseInt(args[0]);
-//		}
-		
-		System.out.println("Número de jugadores: " + n);
-		System.out.println();
-		System.out.println();
-		tablaTorneo(n);
-		System.out.println();
-		System.out.println();
-		tablaPantalla(n);
+
+		switch (args.length) {
+		case 0:
+			// imprimirAyuda();
+			break;
+		case 1:
+			if (args[0].equals("-h")) {
+				// imprimirAyuda();
+				break;
+			} else {
+				n = Integer.parseInt(args[0]);
+				correcto = true;
+				break;
+			}
+
+		case 2:
+			if (args[0].equals("-t")) {
+				traza = true;
+				n = Integer.parseInt(args[1]);
+				correcto = true;
+				break;
+			} else {
+				n = Integer.parseInt(args[0]);
+				nombreArchivo = args[1];
+				try {
+					jugadores(nombreArchivo, n);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				correcto = true;
+				break;
+			}
+		case 3:
+			if (args[0].equals("-t")) {
+				traza = true;
+				n = Integer.parseInt(args[0]);
+				nombreArchivo = args[1];
+				correcto = true;
+				break;
+			}
+
+		}
+
+		if (correcto) {
+			System.out.println("Número de jugadores: " + n);
+			System.out.println();
+			System.out.println();
+			tablaTorneo(n);
+			System.out.println();
+			System.out.println();
+			tablaPantalla(n);
+		} else {
+			imprimirAyuda();
+		}
 	}
 
+	private static void imprimirAyuda() {
+		System.out.println("SINTAXIS: Torneo [-t][-h] n [fichero entrada]");
+		System.out.println("         -t       Traza la parametrización de cada invocación recursiva");
+		System.out.println("         -h       Muestra esta ayuda");
+		System.out.println("          n       Numero de jugadores");
+		System.out.println("[fichero entrada] Listado de los nombres de los jugadores del torneo");
+	}
+
+	public static void jugadores(String archivo, int n) throws FileNotFoundException, IOException {
+		String nombre;
+      
+        nombreJugadores = new String[n+1];
+        
+        FileReader fichero = new FileReader(archivo);
+        BufferedReader buffer = new BufferedReader(fichero);
+        int i=1;
+        while((nombre = buffer.readLine())!=null) {
+        	nombreJugadores[i] = nombre;
+        	
+            System.out.print(nombre);
+            System.out.println("  i="+i);
+            i++;
+        }
+        buffer.close();
+    }
 	private static void tablaPantalla(int jugadores) {
 		// TODO Auto-generated method stub
 
@@ -41,12 +109,11 @@ public class Torneo {
 		} else {
 			dias = jugadores;
 		}
-		
-		
+
 		System.out.println("Partidos del Torneo de Tenis para " + jugadores + " jugadores en " + dias + " jornadas");
 		System.out.println();
-		
-		System.out.print("[ JUG ]");		
+
+		System.out.print("[ JUG ]");
 		for (i = 0; i < dias; i++) {
 			if (i + 1 < 10) {
 				System.out.print("[Dia " + (i + 1) + " ]");
@@ -64,7 +131,7 @@ public class Torneo {
 				} else {
 					System.out.print("[ J" + (i + 1) + " ]");
 				}
-				
+
 				for (j = 0; j < dias; j++) {
 					if (encuentros[i][j] == 0) {
 						System.out.print("[   -  ]");
@@ -78,7 +145,7 @@ public class Torneo {
 			}
 		} else {
 			System.out.println();
-			for (i = 0; i < (dias+1); i++) {
+			for (i = 0; i < (dias + 1); i++) {
 				if (i + 1 < 10) {
 					System.out.print("[  J" + (i + 1) + " ]");
 				} else {
@@ -118,8 +185,9 @@ public class Torneo {
 	void tablaTorneo(int n) {
 		int jugador;
 		int dia;
-		System.out.println("Traza nº de jugadores " + n);
-
+		if (traza) {
+			System.out.println("Traza nº de jugadores " + n);
+		}
 		// caso base
 		if (n == 2) {
 			encuentros[0][0] = 2;
