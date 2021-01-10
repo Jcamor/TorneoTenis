@@ -9,8 +9,9 @@ public class Torneo {
 	public static int n = 2; // caso base
 	public static boolean traza = false;
 	public static boolean correcto = false;
+	public static boolean jugadoresNombre = false;
 	public static String nombreArchivo;
-	public static String nombreJugadores[];
+	public static String[] nombreJugadores;
 
 	public static void main(String[] args) {
 
@@ -37,6 +38,7 @@ public class Torneo {
 			} else {
 				n = Integer.parseInt(args[0]);
 				nombreArchivo = args[1];
+				jugadoresNombre = true;
 				try {
 					jugadores(nombreArchivo, n);
 				} catch (IOException e) {
@@ -51,6 +53,7 @@ public class Torneo {
 				traza = true;
 				n = Integer.parseInt(args[0]);
 				nombreArchivo = args[1];
+				jugadoresNombre = true;
 				correcto = true;
 				break;
 			}
@@ -64,38 +67,37 @@ public class Torneo {
 			tablaTorneo(n);
 			System.out.println();
 			System.out.println();
-			tablaPantalla(n);
+			tablaPantalla(n, jugadoresNombre, nombreJugadores);
 		} else {
-			imprimirAyuda();
+			Ayuda ayuda = new Ayuda(correcto);
+			ayuda.imprimirAyuda();
 		}
 	}
 
-	private static void imprimirAyuda() {
+	/*private static void imprimirAyuda() {
 		System.out.println("SINTAXIS: Torneo [-t][-h] n [fichero entrada]");
 		System.out.println("         -t       Traza la parametrización de cada invocación recursiva");
 		System.out.println("         -h       Muestra esta ayuda");
 		System.out.println("          n       Numero de jugadores");
 		System.out.println("[fichero entrada] Listado de los nombres de los jugadores del torneo");
-	}
+	}*/
 
 	public static void jugadores(String archivo, int n) throws FileNotFoundException, IOException {
 		String nombre;
-      
-        nombreJugadores = new String[n+1];
-        
-        FileReader fichero = new FileReader(archivo);
-        BufferedReader buffer = new BufferedReader(fichero);
-        int i=1;
-        while((nombre = buffer.readLine())!=null) {
-        	nombreJugadores[i] = nombre;
-        	
-            System.out.print(nombre);
-            System.out.println("  i="+i);
-            i++;
-        }
-        buffer.close();
-    }
-	private static void tablaPantalla(int jugadores) {
+
+		nombreJugadores = new String[n + 1];
+
+		FileReader fichero = new FileReader(archivo);
+		BufferedReader buffer = new BufferedReader(fichero);
+		int i = 1;
+		while ((nombre = buffer.readLine()) != null & i <= n) {
+			nombreJugadores[i] = nombre;
+			i++;
+		}
+		buffer.close();
+	}
+
+	private static void tablaPantalla(int jugadores, boolean jugadoresNombre, String[] nombreJugadores) {
 		// TODO Auto-generated method stub
 
 		int dias, i, j;
@@ -127,18 +129,34 @@ public class Torneo {
 		if (jugadores % 2 != 0) {
 			for (i = 0; i < dias; i++) {
 				if (i + 1 < 10) {
-					System.out.print("[  J" + (i + 1) + " ]");
+					if (jugadoresNombre) {
+						System.out.print("[" + nombreJugadores[i + 1] + "]");
+					} else {
+						System.out.print("[  J" + (i + 1) + " ]");
+					}
 				} else {
-					System.out.print("[ J" + (i + 1) + " ]");
+					if (jugadoresNombre) {
+						System.out.print("[" + nombreJugadores[i + 1] + "]");
+					} else {
+						System.out.print("[ J" + (i + 1) + " ]");
+					}
 				}
 
 				for (j = 0; j < dias; j++) {
 					if (encuentros[i][j] == 0) {
 						System.out.print("[   -  ]");
 					} else if (encuentros[i][j] < 10) {
-						System.out.print("[   " + encuentros[i][j] + "  ]");
+						if (jugadoresNombre) {
+							System.out.print("[" + nombreJugadores[encuentros[i][j]] + "]");
+						} else {
+							System.out.print("[   " + encuentros[i][j] + "  ]");
+						}
 					} else {
-						System.out.print("[  " + encuentros[i][j] + "  ]");
+						if (jugadoresNombre) {
+							System.out.print("[" + nombreJugadores[encuentros[i][j]] + "]");
+						} else {
+							System.out.print("[  " + encuentros[i][j] + "  ]");
+						}
 					}
 				}
 				System.out.println();
@@ -147,17 +165,33 @@ public class Torneo {
 			System.out.println();
 			for (i = 0; i < (dias + 1); i++) {
 				if (i + 1 < 10) {
-					System.out.print("[  J" + (i + 1) + " ]");
+					if (jugadoresNombre) {
+						System.out.print("[" + nombreJugadores[i + 1] + "]");
+					} else {
+						System.out.print("[  J" + (i + 1) + " ]");
+					}
 				} else {
-					System.out.print("[ J" + (i + 1) + " ]");
+					if (jugadoresNombre) {
+						System.out.print("[" + nombreJugadores[i + 1] + "]");
+					} else {
+						System.out.print("[ J" + (i + 1) + " ]");
+					}
 				}
 				for (j = 0; j < dias; j++) {
 					if (encuentros[i][j] == 0) {
 						System.out.print("[   -  ]");
 					} else if (encuentros[i][j] < 10) {
-						System.out.print("[   " + encuentros[i][j] + "  ]");
+						if (jugadoresNombre) {
+							System.out.print("[" + nombreJugadores[encuentros[i][j]] + "]");
+						} else {
+							System.out.print("[   " + encuentros[i][j] + "  ]");
+						}
 					} else {
-						System.out.print("[  " + encuentros[i][j] + "  ]");
+						if (jugadoresNombre) {
+							System.out.print("[" + nombreJugadores[encuentros[i][j]] + "]");
+						} else {
+							System.out.print("[  " + encuentros[i][j] + "  ]");
+						}
 					}
 				}
 				System.out.println();
