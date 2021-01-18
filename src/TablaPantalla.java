@@ -7,15 +7,11 @@ public class TablaPantalla {
 	public void pantalla(int jugadores, boolean jugadoresNombre, String[] nombreJugadores, int[][] encuentros) {
 		// TODO Auto-generated method stub
 		int dias, i, j;
-		/*
-		 * Si n es par la cantidad de dias es n-1, si es impar la cantidad de dias es n
-		 * y hay día de descanso para los jugadores
-		 */
 
 		if (jugadores % 2 == 0) {
-			dias = jugadores - 1;
+			dias = jugadores - 1;   //Si jugadores es par los dias son  igual a jugadores - un dia
 		} else {
-			dias = jugadores;
+			dias = jugadores;		//Si jugadores es impar lod dias son igual a jugadores hay
 		}
 
 		System.out.println("Partidos del Torneo de Tenis para " + jugadores + " jugadores en " + dias + " jornadas");
@@ -31,7 +27,6 @@ public class TablaPantalla {
 		}
 		System.out.println();
 
-		// Impresión de valores
 		if (jugadores % 2 != 0) {
 			for (i = 0; i < dias; i++) {
 				if (i + 1 < 10) {

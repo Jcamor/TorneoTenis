@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.IOException;
+import java.io.FileInputStream;
+
+import java.io.InputStreamReader;
 
 public class Torneo {
 	// MAXIMO JUGADORES = 50;
@@ -51,8 +54,14 @@ public class Torneo {
 		case 3:
 			if (args[0].equals("-t")) {
 				traza = true;
-				n = Integer.parseInt(args[0]);
-				nombreArchivo = args[1];
+				n = Integer.parseInt(args[1]);
+				nombreArchivo = args[2];
+				try {
+					jugadores(nombreArchivo, n);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				jugadoresNombre = true;
 				correcto = true;
 				break;
@@ -76,18 +85,23 @@ public class Torneo {
 	}
 
 	public static void jugadores(String archivo, int n) throws FileNotFoundException, IOException {
-		String nombre;
-
+		
 		nombreJugadores = new String[n + 1];
-
-		FileReader fichero = new FileReader(archivo);
-		BufferedReader buffer = new BufferedReader(fichero);
-		int i = 1;
-		while ((nombre = buffer.readLine()) != null & i <= n) {
-			nombreJugadores[i] = nombre;
-			i++;
+		
+		try {
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), "UTF-8"));
+			String nombre;
+			int i = 1;
+			while ((nombre = buffer.readLine()) != null & i <= n) {
+				nombreJugadores[i] = nombre;
+				i++;
+			}
+			buffer.close();
+		} catch (IOException ex) {
+			/* Error en el primer parámetro */
+			System.err.println("No se puede abrir el fichero jugadores para su lectura.");
 		}
-		buffer.close();
+		
 	}
 	
 	// Verificar que n es potencia de 2
@@ -132,7 +146,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante inferior derecho */
+			/* cuadrante inferior derecho */
 			for (jugador = n / 2; jugador < n; jugador++) {
 				for (dia = n / 2 - 1; dia < n - 1; dia++) {
 					encuentros[jugador][dia] = (jugador + 1) - (dia + 1);
@@ -141,7 +155,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante inferior izquierdo */
+			/* cuadrante inferior izquierdo */
 			for (jugador = n / 2; jugador < n; jugador++) {
 				for (dia = 0; dia < n / 2 - 1; dia++) {
 					encuentros[jugador][dia] = encuentros[jugador - (n / 2)][dia] + (n / 2);
@@ -149,14 +163,11 @@ public class Torneo {
 			}
 
 		} else if (n % 2 == 0) {
-			/**
-			 * Si no es múltiplo de 2 pero el número de jugadores es par como el 6, 10, 12,
-			 * 14, etc.
-			 */
+			// Si numero de jugadores es PAR
 
 			/* Dividimos hasta llegar al caso base */
 			tablaTorneo(n / 2);
-			/* Llenado del cuadrante superior derecho */
+			/* cuadrante superior derecho */
 			for (jugador = 0; jugador < n / 2; jugador++) {
 				for (dia = n / 2; dia < n - 1; dia++) {
 					encuentros[jugador][dia] = (jugador + 1) + (dia + 1);
@@ -165,7 +176,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante inferior derecho */
+			/* cuadrante inferior derecho */
 			for (jugador = n / 2; jugador < n; jugador++) {
 				for (dia = n / 2; dia < n - 1; dia++) {
 					encuentros[jugador][dia] = (jugador + 1) - (dia + 1);
@@ -174,7 +185,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante inferior izquierdo */
+			/* cuadrante inferior izquierdo */
 			for (jugador = n / 2; jugador < n; jugador++) {
 				for (dia = 0; dia < n / 2; dia++) {
 					if (encuentros[jugador - (n / 2)][dia] != 0) {
@@ -182,7 +193,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante superior izquierdo, sustituimos los valores de 0 */
+			/* cuadrante superior izquierdo, sustituimos por 0 */
 			for (jugador = 0; jugador < n / 2; jugador++) {
 				for (dia = 0; dia < (n / 2); dia++) {
 					if (encuentros[jugador][dia] == 0) {
@@ -190,7 +201,7 @@ public class Torneo {
 					}
 				}
 			}
-			/* Llenado del cuadrante inferior izquierdo, sustituimos los valores de 0 */
+			/* cuadrante inferior izquierdo, sustituimos por 0 */
 			for (jugador = (n / 2); jugador < n; jugador++) {
 				for (dia = 0; dia < (n / 2); dia++) {
 					if (encuentros[jugador][dia] == 0) {
@@ -206,11 +217,9 @@ public class Torneo {
 			 * recursiva lleguemos nuevamente al caso base
 			 */
 			tablaTorneo(n + 1);
-			/*
-			 * Eliminamos los valores excedentes creados por llamar a la función con n+1
-			 * estos valores excedentes son los días de descanso cuando la cantidad de
-			 * jugadores es impar
-			 */
+			
+			 // Eliminaos los dias de descando cuando es impar el número de jugadores
+			 
 			for (jugador = 0; jugador < n; jugador++) {
 				for (dia = 0; dia < n; dia++) {
 					if (encuentros[jugador][dia] == (n + 1)) {
